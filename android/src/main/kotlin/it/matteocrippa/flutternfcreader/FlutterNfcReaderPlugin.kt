@@ -34,7 +34,8 @@ class FlutterNfcReaderPlugin : FlutterPlugin, ActivityAware, MethodCallHandler, 
             NfcAdapter.FLAG_READER_NFC_B or
             NfcAdapter.FLAG_READER_NFC_BARCODE or
             NfcAdapter.FLAG_READER_NFC_F or
-            NfcAdapter.FLAG_READER_NFC_V
+            NfcAdapter.FLAG_READER_NFC_V or
+            NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS
 
 
     override fun onMethodCall(call: MethodCall, result: Result) {
