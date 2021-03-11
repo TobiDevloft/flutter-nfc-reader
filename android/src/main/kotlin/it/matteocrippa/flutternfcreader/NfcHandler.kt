@@ -21,7 +21,14 @@ class NfcWriter(result: MethodChannel.Result, call: MethodCall) : AbstractNfcHan
                 ?: return result.error("404", "Missing parameter", null)
         val payload = call.argument<String>("label")
                 ?: return result.error("404", "Missing parameter", null)
-        val nfcRecord = NdefRecord(NdefRecord.TNF_EXTERNAL_TYPE, type.toByteArray(), byteArrayOf(), payload.toByteArray())
+        val isWritingURI = call.argument<Boolean>("isWritingURI")
+                ?: false
+        val nfcRecord: NdefRecord
+        if (!isWritingURI) {
+            nfcRecord = NdefRecord(NdefRecord.TNF_EXTERNAL_TYPE, type.toByteArray(), byteArrayOf(), payload.toByteArray())
+        } else {
+            nfcRecord = NdefRecord.createUri(payload)
+        }
         val nfcMessage = NdefMessage(arrayOf(nfcRecord))
         writeMessageToTag(nfcMessage, tag)
         val data = mapOf(kId to "", kContent to payload, kError to "", kStatus to "write")
@@ -34,7 +41,6 @@ class NfcWriter(result: MethodChannel.Result, call: MethodCall) : AbstractNfcHan
 
     private fun writeMessageToTag(nfcMessage: NdefMessage, tag: Tag?): Boolean {
         val nDefTag = Ndef.get(tag)
-
         nDefTag?.let {
             it.connect()
             if (it.maxSize < nfcMessage.toByteArray().size) {

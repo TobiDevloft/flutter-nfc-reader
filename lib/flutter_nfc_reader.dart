@@ -95,9 +95,9 @@ class FlutterNfcReader {
         .invokeMethod('NfcRead', <String, dynamic>{"instruction": instruction});
   }
 
-  static Future<NfcData> write(String path, String label) async {
+  static Future<NfcData> write(String path, String label, {bool isWritingURI = false}) async {
     final Map data = await _channel.invokeMethod(
-        'NfcWrite', <String, dynamic>{'label': label, 'path': path});
+        'NfcWrite', <String, dynamic>{'label': label, 'path': path, 'isWritingURI': isWritingURI});
 
     final NfcData result = NfcData.fromMap(data);
 
